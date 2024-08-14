@@ -20,7 +20,7 @@ Install requirements:
 pip install -r requirements.txt
 ```
 
-Create `.env` file:
+Rename the `.env.example` to `.env`. The postgres url is a valid url, but you can change it if you'd like. In the end, your `.env` file should look something like this:
 
 ```bash
 DATABASE_URL=postgresql://postgres:postgres@0.0.0.0:5432/customtodos
