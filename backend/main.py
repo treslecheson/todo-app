@@ -1,15 +1,12 @@
 from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from sqlalchemy.orm import Session
+from sqlmodel import Session
 
 import crud
-import models
-import schemas
+from database import get_db
+from models import Todo
+from schemas import CreateTodoRequest
 
-from database import SessionLocal, engine
-
-
-models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
@@ -21,18 +18,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Dependency
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
 
-@app.get("/", response_model=list[schemas.Todo])
-async def get_todos(db: Session = Depends(get_db)) -> list[schemas.Todo]:
+@app.get("/")
+async def get_todos(db: Session = Depends(get_db)) -> list[Todo]:
     return crud.get_todos(db)
 
-@app.post("/", response_model=schemas.Todo)
-async def create_todo(todo: schemas.TodoCreate, db: Session = Depends(get_db)) -> schemas.Todo:
+
+@app.post("/")
+async def create_todo(todo: CreateTodoRequest, db: Session = Depends(get_db)) -> Todo:
     return crud.create_todo(db=db, todo=todo)

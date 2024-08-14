@@ -1,14 +1,15 @@
-from sqlalchemy.orm import Session
+from sqlmodel import select, Session
 
-import models
-import schemas
+from models import Todo
+from schemas import CreateTodoRequest
 
 
-def get_todos(db: Session):
-    return db.query(models.Todo).all()
+def get_todos(db: Session) -> list[Todo]:
+    return db.exec(select(Todo)).all()
 
-def create_todo(db: Session, todo: schemas.TodoCreate):
-    db_todo = models.Todo(**todo.model_dump())
+
+def create_todo(db: Session, todo: CreateTodoRequest) -> Todo:
+    db_todo: Todo = Todo(**todo.model_dump())
     db.add(db_todo)
     db.commit()
     db.refresh(db_todo)

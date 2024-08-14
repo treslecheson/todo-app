@@ -1,11 +1,7 @@
-from sqlalchemy import Column, Integer, String
-
-from database import Base
+from sqlmodel import Field, SQLModel
 
 
-class Todo(Base):
-    __tablename__ = "todos"
-
-    id = Column(Integer, primary_key=True)
-    number = Column(Integer)
-    description = Column(String)
+class Todo(SQLModel, table=True):
+    id: int = Field(primary_key=True)
+    number: int
+    description: str
